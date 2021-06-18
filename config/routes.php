@@ -44,6 +44,26 @@ use Cake\Routing\RouteBuilder;
 /** @var \Cake\Routing\RouteBuilder $routes */
 $routes->setRouteClass(DashedRoute::class);
 
+$routes->scope(
+    '/bookmarks',
+    ['controller' => 'Bookmarks'],
+    function ($routes) {
+        $routes->connect('/tagged/*', ['action' => 'tags']);
+    }
+);
+
+$routes->scope('/', function ($routes) {
+    $routes->connect('/', [
+        'controller' => 'Pages',
+        'action' => 'display', 'home'
+    ]);
+    $routes->connect('/pages/*', [
+        'controller' => 'Pages',
+        'action' => 'display'
+    ]);
+    $routes->fallbacks();
+});
+
 $routes->scope('/', function (RouteBuilder $builder) {
     /*
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
