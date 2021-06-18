@@ -98,4 +98,15 @@ class BookmarksTable extends Table
 
         return $rules;
     }
+
+    public function findTagged(Query $query, array $options) {
+        if (empty($options['tags'])) {
+            $bookmarks = $query
+            ->select(['Bookmarks.id','Bookmarks.url','Bookmarks.title','Bookmarks.description'])
+            ->leftJoinWith('Tags')
+            ->where(['Tagss.title IS' => null])
+            ->group(['Bookmarks.id']);
+        }
+        return $query;
+    }
 }
