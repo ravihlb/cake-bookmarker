@@ -73,16 +73,16 @@ class BookmarksController extends AppController
     public function edit($id = null)
     {
         $bookmark = $this->Bookmarks->get($id, [
-            'contain' => [],
+            'contain' => ['Tags'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $bookmark = $this->Bookmarks->patchEntity($bookmark, $this->request->getData());
+            $bookmark->user_id = $this->Auth->user('id');
             if ($this->Bookmarks->save($bookmark)) {
-                $this->Flash->success(__('The bookmark has been saved.'));
-
+                $this->Flash->success('The bookmark has been saved.');
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The bookmark could not be saved. Please, try again.'));
+            $this->Flash->error('The bookmark could not be saved. Please, try again.');
         }
         $tags = $this->Bookmarks->Tags->find('list')->all();
         $this->set(compact('bookmark', 'tags'));
