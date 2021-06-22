@@ -19,11 +19,12 @@ class BookmarksController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users'],
+            'conditions' => [
+                'Bookmarks.user_id' => $this->Auth->user('id'),
+            ]
         ];
-        $bookmarks = $this->paginate($this->Bookmarks);
-
-        $this->set(compact('bookmarks'));
+        $this->set('bookmarks', $this->paginate($this->Bookmarks));
+        $this->viewBuilder()->setOption('serialize', ['bookmarks']);
     }
 
     /**
@@ -73,7 +74,7 @@ class BookmarksController extends AppController
     public function edit($id = null)
     {
         $bookmark = $this->Bookmarks->get($id, [
-            'contain' => ['Tags'],
+            'contain' => ['BookmarkTags'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $bookmark = $this->Bookmarks->patchEntity($bookmark, $this->request->getData());
@@ -84,7 +85,7 @@ class BookmarksController extends AppController
             }
             $this->Flash->error('The bookmark could not be saved. Please, try again.');
         }
-        $tags = $this->Bookmarks->Tags->find('list')->all();
+        $tags = $this->Bookmarks->BookmarkTags->find('list')->all();
         $this->set(compact('bookmark', 'tags'));
         $this->viewBuilder()->setOption('serialize', ['bookmark']);
     }
