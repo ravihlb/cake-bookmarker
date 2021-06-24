@@ -104,7 +104,7 @@ class BookmarksTable extends Table
             $bookmarks = $query
             ->select(['Bookmarks.id','Bookmarks.url','Bookmarks.title','Bookmarks.description'])
             ->leftJoinWith('Tags')
-            ->where(['Tags.title IS' => null])
+            ->where(['Tagss.title IS' => null])
             ->group(['Bookmarks.id']);
         }
         return $query;
